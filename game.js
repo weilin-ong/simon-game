@@ -6,32 +6,67 @@ var userClickedPattern =[];
 var level = 0;
 var start = false;
 
-//keydown event to kick start
-$(document).on("keydown", function() {
-    
-    if(!start){
-        nextSequence();
-        start = true;
-    }  
-});
-
+/* dom content loaded and event listener*/
 
 $(document).ready(function() {
 
-    //button click event
+    /*keydown or click to kick start based on screen size*/
+
+    //smaller or equal to tablet size
+    if(window.matchMedia("(max-width:728px)").matches){
+        $("h1").html("<button class='tablet'>Start game</button>");
+        $(".tablet").on("click", newStart);
+
+    //larger than tablet size
+    }else{
+        $(document).on("keydown", newStart);
+    }
+
+    /*user click and update userclickedpattern*/
+
     $(".btn").on("click", function(){
         var userChosenColour = $(this).attr("id");
         userClickedPattern.push(userChosenColour);
     
-        //play sound when button is clicked
+        //play sound and effect when button is clicked
         playSound(userChosenColour);
         animatePress(userChosenColour);
+
+        //check answer for every button clicked
         checkAnswer(userClickedPattern.length-1);
     });
+
+    /*user click and reveal path click*/
+    $(".path").on("click", function(){
+        gamePattern.forEach(function(color, i) {
+            setTimeout(function(){
+                $("#" + color).fadeOut(150).fadeIn(150); 
+                playSound(color);
+            }, i * 500)
+        });
+    });
+
 });
 
+/*control function*/
 
-//check
+//new start of game
+function newStart(){
+    if(!start){
+        nextSequence();
+        start = true;
+    }
+}
+
+
+//restart the game
+function startOver(){
+    level = 0;
+    gamePattern =[];
+    start = false;
+}
+
+//check if user input match game pattern 
 function checkAnswer(currentLevel){
 
     //if userclickedpattern match gamepattern, continue
@@ -60,14 +95,7 @@ function checkAnswer(currentLevel){
         startOver();
     }  
 }
-
-//restart
-function startOver(){
-    level = 0;
-    gamePattern =[];
-    start = false;
-}
-        
+      
 
 //generate new sequence
 function nextSequence() {
@@ -79,8 +107,8 @@ function nextSequence() {
     level++;
     $("#level-title").text("Level " + level);
 
-    //generate random number between 0 and 3
-    var randomNumber = Math.floor(Math.random()*4);
+    //generate random number between 0 and lenght of coloured button
+    var randomNumber = Math.floor(Math.random()*buttonColours.length);
     
     //generate random colour
     var randomChosenColour =  buttonColours[randomNumber];
@@ -109,7 +137,3 @@ function animatePress(currentColour){
         $("#"+ currentColour).removeClass("pressed");
     }, 100)
 }
-
-
-
-
