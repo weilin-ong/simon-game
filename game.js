@@ -1,3 +1,5 @@
+/*variables*/
+
 var buttonColours = ["red", "blue", "green", "yellow"];
 
 var gamePattern =[];
@@ -10,17 +12,9 @@ var start = false;
 
 $(document).ready(function() {
 
-    /*keydown or click to kick start based on screen size*/
+    /*keydown to kick start */
 
-    //smaller or equal to tablet size
-    if(window.matchMedia("(max-width:728px)").matches){
-        $("h1").html("<button class='tablet'>Start game</button>");
-        $(".tablet").on("click", newStart);
-
-    //larger than tablet size
-    }else{
-        $(document).on("keydown", newStart);
-    }
+    $(document).on("keydown", newStart);
 
     /*user click and update userclickedpattern*/
 
@@ -45,16 +39,44 @@ $(document).ready(function() {
             }, i * 500)
         });
     });
-
 });
 
 /*control function*/
+
+// record user's highest score
+function highestScore(){
+    var userScore = localStorage.getItem("userScore");
+    var currentScore = localStorage.getItem("currentScore");
+
+    //keep track user's current score
+    currentScore++;
+    localStorage.setItem("currentScore", currentScore);
+    
+    // if current score exceed user's record, replace userscore with currentscore
+    if(currentScore > userScore){
+        localStorage.setItem("userScore", currentScore);
+        return $("h2").text("Highest score: " + userScore);
+    }
+
+    return $("h2").text("Highest score: " + userScore);
+}
 
 //new start of game
 function newStart(){
     if(!start){
         nextSequence();
         start = true;
+        localStorage.setItem("currentScore", 0)
+
+        // if it's user's first play, create new storage for score
+        if(!localStorage.getItem('userScore')){
+            localStorage.setItem('userScore', 0);
+            $("h2").text("Highest score: " + localStorage.getItem("userScore"));
+        
+        //else, display user's highest score
+        }else{
+            highestScore()
+        }
     }
 }
 
@@ -75,6 +97,11 @@ function checkAnswer(currentLevel){
         //because userclickpattern is set to empty every time when nextsequence is called, 
         if(userClickedPattern.length === gamePattern.length){
             setTimeout(nextSequence,1000);
+
+            //display user's highest record
+            highestScore();
+            
+
         }
 
     //if not, inform user game over and restart whole game
@@ -84,17 +111,18 @@ function checkAnswer(currentLevel){
         $("#level-title").text("Game Over, Press Any Key to Restart")
 
         //alert user with sound and effect
-        playSound("wrong");
-        
+        playSound("wrong");     
         $("body").addClass("game-over");
         setTimeout(function(){
-            $("body").removeClass("game-over");
+        $("body").removeClass("game-over");
         }, 200);
-
+        
         //restart
         startOver();
     }  
-}
+} 
+
+/*helper function*/
       
 
 //generate new sequence
@@ -130,7 +158,7 @@ function playSound(name){
         audio.play();
 }
 
-//animate button 
+//generate animation 
 function animatePress(currentColour){
     $("#"+ currentColour).addClass("pressed");
     setTimeout(function(){
