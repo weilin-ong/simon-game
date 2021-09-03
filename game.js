@@ -75,7 +75,7 @@ function newStart(){
         
         //else, display user's highest score
         }else{
-            highestScore()
+            $("h2").text("Highest score: " + localStorage.getItem("userScore"));
         }
     }
 }
