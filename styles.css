@@ -12,12 +12,19 @@ body {
   line-height: 1.5;
 }
 
-#score{
+h2, h3{
   font-family: 'Press Start 2P', cursive;
-  font-size: 1.8rem;
   margin:  3%;
   color: #fffae3;
   line-height: 1.5;
+}
+
+#highest-score{
+  font-size: 1.8rem;
+}
+
+#current-score{
+  font-size: 1.5rem;
 }
 
 .container {
@@ -60,8 +67,13 @@ body {
     margin: 5%;
   }
 
-  #score{
+  #highest-score{
     font-size: 1.2rem;
+    margin:7%;
+  }
+
+  #current-score{
+    font-size: 1rem;
     margin:7%;
   }
 

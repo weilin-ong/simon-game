@@ -45,20 +45,27 @@ $(document).ready(function() {
 
 // record user's highest score
 function highestScore(){
-    var userScore = localStorage.getItem("userScore");
-    var currentScore = localStorage.getItem("currentScore");
 
-    //keep track user's current score
-    currentScore++;
-    localStorage.setItem("currentScore", currentScore);
+    // to store original score that hasnt been updated, eg from start it is 0
+    var userScore = localStorage.getItem("userScore"); 
     
-    // if current score exceed user's record, replace userscore with currentscore
-    if(currentScore > userScore){
-        localStorage.setItem("userScore", currentScore);
-        return $("h2").text("Highest score: " + userScore);
+    // if number of level exceeds user's record, replace userscore with level-1
+    if(level > userScore){ 
+
+        //store highest score in userscore
+        localStorage.setItem("userScore", (level-1)); 
+
+        //update userScore's stored value
+        userScore = localStorage.getItem("userScore"); 
+
+        $("h2").text("Highest score: " + userScore); 
+        $("h3").text("Current score: " + (level-1)); 
+        return;
     }
 
-    return $("h2").text("Highest score: " + userScore);
+    $("h2").text("Highest score: " + userScore);
+    $("h3").text("Current score: " + (level-1));
+    return;
 }
 
 //new start of game
@@ -66,16 +73,17 @@ function newStart(){
     if(!start){
         nextSequence();
         start = true;
-        localStorage.setItem("currentScore", 0)
 
         // if it's user's first play, create new storage for score
         if(!localStorage.getItem('userScore')){
             localStorage.setItem('userScore', 0);
-            $("h2").text("Highest score: " + localStorage.getItem("userScore"));
+            $("h2").text("Highest score: " + localStorage.getItem("userScore")); // 0
+            $("h3").text("Current score: " + (level-1));
         
         //else, display user's highest score
         }else{
             $("h2").text("Highest score: " + localStorage.getItem("userScore"));
+            $("h3").text("Current score: " + (level-1));
         }
     }
 }
@@ -91,17 +99,18 @@ function startOver(){
 //check if user input match game pattern 
 function checkAnswer(currentLevel){
 
-    //if userclickedpattern match gamepattern, continue
+
+    //if every userclickedpattern match every gamepattern, continue
     if (userClickedPattern[currentLevel] === gamePattern[currentLevel]){
 
         //because userclickpattern is set to empty every time when nextsequence is called, 
         if(userClickedPattern.length === gamePattern.length){
-            setTimeout(nextSequence,1000);
+            setTimeout(function(){
+                nextSequence(); // level = 2
+                highestScore();
+            },1000);
 
-            //display user's highest record
-            highestScore();
             
-
         }
 
     //if not, inform user game over and restart whole game
@@ -132,7 +141,7 @@ function nextSequence() {
     userClickedPattern =[];
 
     //keep track of level
-    level++;
+    level++; // 1
     $("#level-title").text("Level " + level);
 
     //generate random number between 0 and lenght of coloured button
