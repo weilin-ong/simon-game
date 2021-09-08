@@ -7,14 +7,14 @@ body {
 #level-title {
   font-family: 'Press Start 2P', cursive;
   font-size: 2.8rem;
-  margin:  3%;
+  margin:  2%;
   color: #FEF2BF;
   line-height: 1.5;
 }
 
 h2, h3{
   font-family: 'Press Start 2P', cursive;
-  margin:  3%;
+  margin:  2%;
   color: #fffae3;
   line-height: 1.5;
 }
@@ -29,9 +29,8 @@ h2, h3{
 
 .container {
   display: block;
-  width: 70%;
+  width: 80%;
   margin: auto;
-
 }
 
 .row{
@@ -52,15 +51,51 @@ h2, h3{
 }
 
 .btn {
-  margin: 2.5% 7%;
+  margin: 0 5%;
   display: inline-block;
-  height: 180px;
-  width: 180px;
+  height: 220px;
+  width: 220px;
   border: 10px solid black;
   border-radius: 20%;
 }
 
-@media screen and (max-width:728px) {
+.guide{
+  color: white;
+  font-size: .85rem;
+  font-family: 'Press Start 2P', cursive;
+  width: max-content;
+  padding: 3% 0;
+  margin: 0 auto;
+}
+
+.guide[data-guide]{
+  position: relative;
+}
+
+.guide[data-guide]::after{
+  content: attr(data-guide);
+  position: absolute;
+  top: 0%;
+  left: 0;
+  display: block;
+  padding: 10%;
+  width: 120%;
+  border-radius: 10px;
+  color: black;
+  background-color: aliceblue;
+  text-align: left;
+  font-size: .65rem;
+  line-height: 18px;
+  transform: scale(0);
+  transition: transform ease-in-out 250ms;
+  
+}
+
+.guide[data-guide]:hover:after{
+  transform: scale(1);
+}
+
+@media screen and (max-width:734px) {
   
   #level-title {
     font-size: 1.8rem;
@@ -78,14 +113,23 @@ h2, h3{
   }
 
   .btn {
-    height: 100px;
-    width: 100px;
-    border: 5px solid black;
+    height: 130px;
+    width: 130px;
+    border: 3px solid black;
   }
 
   .path{
     font-size: 0.75rem;
     margin: 7%;
+  }
+
+  .guide{
+    font-size:.67rem;
+  }
+
+  .guide[data-guide]::after{
+    font-size: .52rem;
+    line-height: 1rem;
   }
 
 }
